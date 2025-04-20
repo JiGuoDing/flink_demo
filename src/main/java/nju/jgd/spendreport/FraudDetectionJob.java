@@ -22,9 +22,12 @@ public class FraudDetectionJob {
         每条交易数据包括了信用卡 ID （accountId），交易发生的时间 （timestamp） 以及交易的金额（amount）。
         绑定到数据源上的 name 属性是为了调试方便，如果发生一些异常，我们能够通过它快速定位问题发生在哪里。
          */
-        DataStream<Transaction> transcations = env
+        DataStream<Transaction> transactions = env
                 .addSource(new TransactionSource())
                 .name("transactions");
+
+        // 输出每一条交易记录信息
+        // transactions.print().name("debug-print");
 
         /*
         对事件分区 & 欺诈检测
@@ -34,7 +37,7 @@ public class FraudDetectionJob {
         process() 函数对流绑定了一个操作，这个操作将会对流上的每一个消息调用定义好的函数。
         通常，一个操作会紧跟着 keyBy 被调用，在这个例子中，这个操作是FraudDetector，该操作是在一个 keyed context 上执行的。
          */
-        DataStream<Alert> alerts = transcations
+        DataStream<Alert> alerts = transactions
                 .keyBy(Transaction::getAccountId)
                 .process(new FraudDetector())
                 .name("fraud-detector");

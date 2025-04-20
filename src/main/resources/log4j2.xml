@@ -14,7 +14,7 @@
 
     <Loggers>
         <!-- 根日志级别，所有日志的默认配置（未明确匹配的日志都遵循此规则） -->
-        <Root level="warn">
+        <Root level="info">
             <AppenderRef ref="Console"/>
 <!--            <AppenderRef ref="File"/>-->
         </Root>
